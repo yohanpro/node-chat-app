@@ -18,7 +18,7 @@ socket.on('newMessage', function (message) {
 
 socket.on('newLocationMessage', function (message) {
   var li = jQuery('<li></li>');
-  var a = jQuery('<a target="_blank">Current Location</a>');
+  var a = jQuery('<a target="_blank">내 현재 위치</a>');
 
   li.text(`${message.from}:`);
   a.attr('href', message.url);
@@ -28,11 +28,13 @@ socket.on('newLocationMessage', function (message) {
 
 jQuery('#message-form').on('submit', function (e) {
   e.preventDefault();
-
+let messageTextBox = jQuery('[name=message]')
   socket.emit('createMessage', {
     from: 'User',
-    text: jQuery('[name=message]').val()
-  }, function () {});
+    text: messageTextBox.val()
+  }, function () {
+    messageTextBox.val('')
+  });
 });
 
 
@@ -42,12 +44,16 @@ locationButton.on('click', function () {
     return alert('Your browser not support geolocation');
   }
 
+
+  locationButton.attr('disabled','disabled').text('위치 보내기..');
+
   navigator.geolocation.getCurrentPosition(function (position) {
     socket.emit('createLocationMessage', {
       latitude: position.coords.latitude,
       longitude: position.coords.longitude
     });
   }, function () {
-    alert('Unable to get current location')
+    locationButton.removeAttr('disabled');
+    alert('Unable to get current location');
   });
 });

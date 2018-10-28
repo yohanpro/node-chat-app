@@ -16,11 +16,11 @@ var io = socketIO(server);
 app.use(express.static(publicPath));
 
 io.on('connection', (socket) => {
-  console.log('New user connected');
+  console.log('새로운 유저가 입장했습니다.');
 
-  socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
+  socket.emit('newMessage', generateMessage('운영자', '안녕? 노답방 실시간 채팅방이야'));
 
-  socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'));
+  socket.broadcast.emit('newMessage', generateMessage('운영자', 'New user joined'));
 
   socket.on('createMessage', (message, callback) => {
     console.log('createMessage', message);
