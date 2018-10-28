@@ -20,7 +20,7 @@ io.on('connection', (socket) => {
 
   socket.emit('newMessage', generateMessage('운영자', '안녕? 노답방 실시간 채팅방이야'));
 
-  socket.broadcast.emit('newMessage', generateMessage('운영자', 'New user joined'));
+  socket.broadcast.emit('newMessage', generateMessage('운영자', '새로운 노답유저 접속'));
 
   socket.on('createMessage', (message, callback) => {
     console.log('createMessage', message);
@@ -31,7 +31,7 @@ io.on('connection', (socket) => {
     io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude,coords.longitude))
   })
   socket.on('disconnect', () => {
-    console.log('User was disconnected');
+    socket.broadcast.emit('newMessage', generateMessage('운영자', '노답유저 나감'));
   });
 });
 
