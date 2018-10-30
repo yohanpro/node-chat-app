@@ -3,8 +3,13 @@ const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
 
-const {generateMessage, generateLocationMessage} = require('./utils/message');
-const {isRealString} = require('./utils/validation');
+const {
+  generateMessage,
+  generateLocationMessage
+} = require('./utils/message');
+const {
+  isRealString
+} = require('./utils/validation');
 const publicPath = path.join(__dirname, '../public');
 const port = process.env.PORT || 3000;
 var app = express();
@@ -15,15 +20,13 @@ app.use(express.static(publicPath));
 
 io.on('connection', (socket) => {
   console.log('New user connected');
-
-  socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
-
-  socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'));
-
+  socket.broadcast.emit('newMessage', generateMessage('운영자', `노답방 채팅앱에 온 걸 환영해!`));
   socket.on('join', (params, callback) => {
     if (!isRealString(params.name) || !isRealString(params.room)) {
       callback('Name and room name are required.');
     }
+    socket.join(params.room);
+    socket.broadcast.emit('newMessage', generateMessage('운영자', `${params.name}님이 입장하셨습니다.`));
 
     callback();
   });
